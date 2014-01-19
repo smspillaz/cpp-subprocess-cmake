@@ -172,15 +172,19 @@ if (NOT CPP_SUBPROCESS_FOUND)
     # Get the EXTERNAL_PROJECT property for the Google Mock library
     # append that as the dependency, otherwise just don't add it
     # and the relevant Find* macros will do the right thing.
-    get_property (GMOCK_LIBRARY_EXTERNAL_PROJECT
-                  TARGET ${GMOCK_LIBRARY}
-                  PROPERTY EXTERNAL_PROJECT)
+    #
+    # Though we're only interested in targets here
+    if (TARGET ${GMOCK_LIBRARY})
+        get_property (GMOCK_LIBRARY_EXTERNAL_PROJECT
+                      TARGET ${GMOCK_LIBRARY}
+                      PROPERTY EXTERNAL_PROJECT)
 
-    if (GMOCK_LIBRARY_EXTERNAL_PROJECT)
-        _append_cache_definition (GTEST_AND_GMOCK_EXTERNAL_SET_DEPENDENCY
-                                  GMOCK_LIBRARY_EXTERNAL_PROJECT
-                                  CPP_SUBPROCESS_CACHE_DEFINITIONS)
-    endif (GMOCK_LIBRARY_EXTERNAL_PROJECT)
+        if (GMOCK_LIBRARY_EXTERNAL_PROJECT)
+            _append_cache_definition (GTEST_AND_GMOCK_EXTERNAL_SET_DEPENDENCY
+                                      GMOCK_LIBRARY_EXTERNAL_PROJECT
+                                      CPP_SUBPROCESS_CACHE_DEFINITIONS)
+        endif (GMOCK_LIBRARY_EXTERNAL_PROJECT)
+    endif (TARGET ${GMOCK_LIBRARY})
 
     ExternalProject_Add (${EXTPROJECT_TARGET}
                          DEPENDS ${CPP_SUBPROCESS_PROJECT_DEPENDENCIES}
