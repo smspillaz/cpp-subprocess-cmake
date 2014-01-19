@@ -63,7 +63,10 @@ macro (_append_cache_library_path CACHE_OPTION LIBRARY CACHE_ARGUMENT_LINE)
 
     if (DEFINED ${LIBRARY})
 
-        get_property (_location TARGET ${${LIBRARY}} PROPERTY LOCATION)
+        set (location_)
+        if (TARGET ${${LIBRARY}})
+            get_property (_location TARGET ${${LIBRARY}} PROPERTY LOCATION)
+        endif (TARGET ${${LIBRARY}})
 
         # If a location is set, we should use that one, otherwise
         # just pass the linker line of the library.
@@ -72,7 +75,7 @@ macro (_append_cache_library_path CACHE_OPTION LIBRARY CACHE_ARGUMENT_LINE)
                   "-D${CACHE_ARGUMENT_LINE}:string=${_location}")
         else (_location)
             list (APPEND ${CACHE_OPTION}
-                  "-D${CACHE_ARGUMENT_LINE}:string=${${VALUE}}")
+                  "-D${CACHE_ARGUMENT_LINE}:string=${${LIBRARY}}")
         endif (_location)
 
     endif (DEFINED ${LIBRARY})
@@ -83,14 +86,17 @@ macro (_append_external_project_deps LIBRARY EXTERNAL_PROJECTS)
 
     if (DEFINED ${LIBRARY})
 
-        get_property (_external_project
-                      TARGET ${${LIBRARY}} PROPERTY EXTERNAL_PROJECT)
+        if (TARGET ${${LIBRARY}})
 
-        # If a location is set, we should use that one, otherwise
-        # just pass the linker line of the library.
-        if (_external_project)
-            list (APPEND ${EXTERNAL_PROJECTS} ${_external_project})
-        endif (_external_project)
+            get_property (_external_project
+                          TARGET ${${LIBRARY}} PROPERTY EXTERNAL_PROJECT)
+
+            # Append relevant external project dependencies
+            if (_external_project)
+                list (APPEND ${EXTERNAL_PROJECTS} ${_external_project})
+            endif (_external_project)
+
+        endif (TARGET ${${LIBRARY}})
 
     endif (DEFINED ${LIBRARY})
 
