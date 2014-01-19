@@ -169,11 +169,18 @@ if (NOT CPP_SUBPROCESS_FOUND)
                                   CPP_SUBPROCESS_PROJECT_DEPENDENCIES
                                   CPP_SUBPROCESS_CACHE_DEFINITIONS)
 
-    if (DEFINED CPP_SUBPROCESS_EXTERNAL_SET_GIT_TAG)
-        set (_cpp_subprocess_git_tag ${CPP_SUBPROCESS_EXTERNAL_SET_GIT_TAG})
-    else (DEFINED CPP_SUBPROCESS_EXTERNAL_SET_GIT_TAG)
-        set (_cpp_subprocess_git_tag master)
-    endif (DEFINED CPP_SUBPROCESS_EXTERNAL_SET_GIT_TAG)
+    # Get the EXTERNAL_PROJECT property for the Google Mock library
+    # append that as the dependency, otherwise just don't add it
+    # and the relevant Find* macros will do the right thing.
+    get_property (GMOCK_LIBRARY_EXTERNAL_PROJECT
+                  TARGET ${GMOCK_LIBRARY}
+                  PROPERTY EXTERNAL_PROJECT)
+
+    if (GMOCK_LIBRARY_EXTERNAL_PROJECT)
+        _append_cache_definition (GTEST_AND_GMOCK_EXTERNAL_SET_DEPENDENCY
+                                  GMOCK_LIBRARY_EXTERNAL_PROJECT
+                                  CPP_SUBPROCESS_CACHE_DEFINITIONS)
+    endif (GMOCK_LIBRARY_EXTERNAL_PROJECT)
 
     ExternalProject_Add (${EXTPROJECT_TARGET}
                          DEPENDS ${CPP_SUBPROCESS_PROJECT_DEPENDENCIES}
