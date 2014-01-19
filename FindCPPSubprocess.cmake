@@ -68,11 +68,11 @@ macro (_append_cache_library_path CACHE_OPTION LIBRARY CACHE_ARGUMENT_LINE)
         # If a location is set, we should use that one, otherwise
         # just pass the linker line of the library.
         if (_location)
-            list (APPEND ${CACHE_ARGUMENT_LINE}
-                  "-D${CACHE_OPTION}:string=${_location}")
+            list (APPEND ${CACHE_OPTION}
+                  "-D${CACHE_ARGUMENT_LINE}:string=${_location}")
         else (_location)
-            list (APPEND ${CACHE_ARGUMENT_LINE}
-                  "-D${CACHE_OPTION}:string=${${VALUE}}")
+            list (APPEND ${CACHE_OPTION}
+                  "-D${CACHE_ARGUMENT_LINE}:string=${${VALUE}}")
         endif (_location)
 
     endif (DEFINED ${LIBRARY})
