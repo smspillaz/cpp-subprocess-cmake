@@ -84,15 +84,11 @@ endmacro (_append_cache_library_path)
 
 macro (_append_dependencies LIBRARY DEPENDENCIES)
 
-    if (DEFINED ${LIBRARY})
+    if (TARGET ${${LIBRARY}})
 
-        if (TARGET ${${LIBRARY}})
+        list (APPEND ${DEPENDENCIES} ${${LIBRARY}})
 
-            list (APPEND ${DEPENDENCIES} ${${LIBRARY}})
-
-        endif (TARGET ${${LIBRARY}})
-
-    endif (DEFINED ${LIBRARY})
+    endif (TARGET ${${LIBRARY}})
 
 endmacro (_append_dependencies)
 
