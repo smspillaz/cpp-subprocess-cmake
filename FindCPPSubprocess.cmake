@@ -82,36 +82,29 @@ macro (_append_cache_library_path CACHE_OPTION LIBRARY CACHE_ARGUMENT_LINE)
 
 endmacro (_append_cache_library_path)
 
-macro (_append_external_project_deps LIBRARY EXTERNAL_PROJECTS)
+macro (_append_dependencies LIBRARY DEPENDENCIES)
 
     if (DEFINED ${LIBRARY})
 
         if (TARGET ${${LIBRARY}})
 
-            get_property (_external_project
-                          TARGET ${${LIBRARY}} PROPERTY EXTERNAL_PROJECT)
-
-            # Append relevant external project dependencies
-            if (_external_project)
-                list (APPEND ${EXTERNAL_PROJECTS} ${_external_project})
-            endif (_external_project)
+            list (APPEND ${DEPENDENCIES} ${${LIBRARY}})
 
         endif (TARGET ${${LIBRARY}})
 
     endif (DEFINED ${LIBRARY})
 
-endmacro (_append_external_project_deps)
+endmacro (_append_dependencies)
 
 macro (_append_extproject_variables LIBRARY
                                     CACHE_ARGUMENT_LINE
-                                    EXTERNAL_PROJECTS
+                                    DEPENDENCIES
                                     CACHE_OPTION)
 
     _append_cache_library_path (${CACHE_OPTION}
                                 ${LIBRARY}
                                 ${CACHE_ARGUMENT_LINE})
-    _append_external_project_deps (${LIBRARY}
-                                   ${EXTERNAL_PROJECTS})
+    _append_dependencies (${LIBRARY} ${DEPENDENCIES})
 
 endmacro (_append_extproject_variables)
 
