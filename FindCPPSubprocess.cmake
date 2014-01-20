@@ -63,7 +63,7 @@ macro (_append_cache_library_path CACHE_OPTION LIBRARY CACHE_ARGUMENT_LINE)
 
     if (DEFINED ${LIBRARY})
 
-        set (location_)
+        set (_location)
         if (TARGET ${${LIBRARY}})
             get_property (_location TARGET ${${LIBRARY}} PROPERTY LOCATION)
         endif (TARGET ${${LIBRARY}})
@@ -84,9 +84,13 @@ endmacro (_append_cache_library_path)
 
 macro (_append_dependencies LIBRARY DEPENDENCIES)
 
+    message ("Maybe append " ${LIBRARY} ${${LIBRARY}})
+
     if (DEFINED ${LIBRARY})
 
         if (TARGET ${${LIBRARY}})
+
+            message ("Appending target " ${${LIBRARY}})
 
             list (APPEND ${DEPENDENCIES} ${${LIBRARY}})
 
@@ -151,6 +155,8 @@ if (NOT CPP_SUBPROCESS_FOUND)
                               GMOCK_INCLUDE_DIR
                               CPP_SUBPROCESS_CACHE_DEFINITIONS)
 
+    message (${GTEST_LIBRARY} ${GMOCK_LIBRARY} ${GTEST_MAIN_LIBRARY} ${GMOCK_MAIN_LIBRARY})
+
     _append_extproject_variables (GTEST_LIBRARY
                                   GTEST_EXTERNAL_SET_LIBRARY
                                   CPP_SUBPROCESS_PROJECT_DEPENDENCIES
@@ -168,12 +174,16 @@ if (NOT CPP_SUBPROCESS_FOUND)
                                   CPP_SUBPROCESS_PROJECT_DEPENDENCIES
                                   CPP_SUBPROCESS_CACHE_DEFINITIONS)
 
+    message (${CPP_SUBPROCESS_CACHE_DEFINITIONS})
+
     ExternalProject_Add (${EXTPROJECT_TARGET}
-                         DEPENDS ${CPP_SUBPROCESS_PROJECT_DEPENDENCIES}
                          URL ${CPP_SUBPROCESS_SOURCES_DIRECTORY}
                          PREFIX ${CPP_SUBPROCESS_PREFIX}
                          CMAKE_CACHE_ARGS ${CPP_SUBPROCESS_CACHE_DEFINITIONS}
                          INSTALL_COMMAND "")
+
+    add_dependencies (${EXTPROJECT_TARGET}
+                      ${CPP_SUBPROCESS_PROJECT_DEPENDENCIES})
 
     set (CPP_SUBPROCESS_LIBRARY polysquare_cpp_subprocess)
 
