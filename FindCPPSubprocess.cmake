@@ -63,7 +63,7 @@ macro (_append_cache_library_path CACHE_OPTION LIBRARY CACHE_ARGUMENT_LINE)
 
     if (DEFINED ${LIBRARY})
 
-        set (location_)
+        set (_location)
         if (TARGET ${${LIBRARY}})
             get_property (_location TARGET ${${LIBRARY}} PROPERTY LOCATION)
         endif (TARGET ${${LIBRARY}})
