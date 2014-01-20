@@ -169,11 +169,13 @@ if (NOT CPP_SUBPROCESS_FOUND)
                                   CPP_SUBPROCESS_CACHE_DEFINITIONS)
 
     ExternalProject_Add (${EXTPROJECT_TARGET}
-                         DEPENDS ${CPP_SUBPROCESS_PROJECT_DEPENDENCIES}
                          URL ${CPP_SUBPROCESS_SOURCES_DIRECTORY}
                          PREFIX ${CPP_SUBPROCESS_PREFIX}
                          CMAKE_CACHE_ARGS ${CPP_SUBPROCESS_CACHE_DEFINITIONS}
                          INSTALL_COMMAND "")
+
+    add_dependencies (${EXTPROJECT_TARGET}
+                      ${CPP_SUBPROCESS_PROJECT_DEPENDENCIES})
 
     set (CPP_SUBPROCESS_LIBRARY polysquare_cpp_subprocess)
 
